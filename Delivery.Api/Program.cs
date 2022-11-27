@@ -28,9 +28,13 @@ builder.Services.AddDbContext<DeliveryContext>(opt =>
     opt.UseLazyLoadingProxies(true);
 },ServiceLifetime.Transient);
 
+builder.Services.AddDbContext<AuditableContext>(ServiceLifetime.Transient);
+
+builder.Services.AddTransient<IOrderRepository, OrderRepository>();
 builder.Services.AddTransient<IProductRepository, ProductRepository>();
 builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
 builder.Services.AddTransient<ISubCategoryRepository, SubCategoryRepository>();
+builder.Services.AddTransient<IOrderService, OrderService>();
 builder.Services.AddTransient<IProductService, ProductService>();
 builder.Services.AddTransient<ICategoryService, CategoryService>();
 builder.Services.AddTransient<ISubCategoryService, SubCategoryService>();

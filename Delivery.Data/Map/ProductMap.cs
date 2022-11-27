@@ -16,6 +16,7 @@ namespace Delivery.Data.Map
         internal static string Name = "name";
         internal static string Description = "description";
         internal static string CreatedAt = "created_at";
+        internal static string Price = "price";
     }
 
     public class ProductMap
@@ -34,6 +35,9 @@ namespace Delivery.Data.Map
 
             builder.Property(x => x.Description)
                    .HasColumnName(ProductDataBaseInfo.Description);
+
+            builder.Property(x => x.Price)
+                   .HasColumnName(ProductDataBaseInfo.Price);
 
             builder.Property(x => x.CreatedAt)
                    .HasColumnName(ProductDataBaseInfo.CreatedAt)

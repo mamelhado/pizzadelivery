@@ -1,5 +1,8 @@
-﻿using Delivery.Domain.Interfaces.Repositories;
+﻿using Delivery.Domain.Entities.Audit;
+using Delivery.Domain.Entities.Enum;
+using Delivery.Domain.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +22,8 @@ namespace Delivery.Data.Repositories
 
         public async Task DeleteAsync(int id, CancellationToken cancellation = default)
         {
-            _context.Set<TEntity>().Remove(await GetByIdAsync(id));
+            var entity = await GetByIdAsync(id);
+            _context.Set<TEntity>().Remove(entity);
             await SaveAsync(cancellation);
         }
 
@@ -89,5 +93,6 @@ namespace Delivery.Data.Repositories
         {
             return await _context.SaveChangesAsync(cancellation);
         }
+
     }
 }
