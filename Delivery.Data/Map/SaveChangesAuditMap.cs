@@ -20,6 +20,7 @@ namespace Delivery.Data.Map
         internal static string AuditId      = "audit_id";
         internal static string Entities     = "entities";
         internal static string Succeeded    = "succeeded";
+        internal static string Action       = "action";
     }
 
     public class SaveChangesAuditMap
@@ -38,6 +39,12 @@ namespace Delivery.Data.Map
 
             builder.Property(x => x.EndTime)
                    .HasColumnName(AuditDataBaseInfo.EndTime);
+
+            builder.Property(x => x.Action)
+                   .HasColumnName(AuditDataBaseInfo.Action)
+                   .HasConversion(v => Enum.GetName(typeof(EntityState),v),
+                                  v => (EntityState)Enum.Parse(typeof(EntityState), v)
+                                  );
 
             builder.Property(x => x.ErrorMessage)
                    .HasColumnName(AuditDataBaseInfo.ErrorMessage);

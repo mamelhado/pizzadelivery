@@ -10,16 +10,17 @@ namespace Delivery.Data
     public class DeliveryContext : DbContext
     {
         private static string Schema = "mvp";
-        private readonly AuditingInterceptor _auditingInterceptor = new AuditingInterceptor();
+        //private readonly AuditingInterceptor _auditingInterceptor = new AuditingInterceptor();
 
         public DeliveryContext(DbContextOptions<DeliveryContext> options) : base(options)
         {
+            
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        { 
-            optionsBuilder.AddInterceptors(_auditingInterceptor);        
+        {
+            //optionsBuilder.AddInterceptors(_auditingInterceptor);        
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

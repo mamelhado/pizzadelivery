@@ -8,13 +8,16 @@ namespace Delivery.Data
     public class AuditableContext : DbContext
     {
         private static string Schema = "mvp";
+        private string ConnectionString;
+
+        public AuditableContext(string connString) 
+        {
+            ConnectionString = connString;
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            IConfiguration config = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.local.json")
-            .Build();
-            var connString = config.GetConnectionString("Mvp");
-            optionsBuilder.UseNpgsql(connString);
+            optionsBuilder.UseNpgsql(ConnectionString);
         }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)

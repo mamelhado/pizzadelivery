@@ -1,6 +1,7 @@
 using AutoMapper;
 using Delivery.Api.Mapper;
 using Delivery.Data;
+using Delivery.Data.Interceptors;
 using Delivery.Data.Repositories;
 using Delivery.Domain.Interfaces.Repositories;
 using Delivery.Domain.Interfaces.Services;
@@ -26,9 +27,13 @@ builder.Services.AddDbContext<DeliveryContext>(opt =>
 {
     opt.UseNpgsql(connString);
     opt.UseLazyLoadingProxies(true);
+    opt.AddInterceptors(new AuditingInterceptor(connString));
 },ServiceLifetime.Transient);
 
-builder.Services.AddDbContext<AuditableContext>(ServiceLifetime.Transient);
+/*builder.Services.AddDbContext<AuditableContext>(op => 
+{
+    op.UseNpgsql(connString);
+}, ServiceLifetime.Transient);*/
 
 builder.Services.AddTransient<IOrderRepository, OrderRepository>();
 builder.Services.AddTransient<IProductRepository, ProductRepository>();

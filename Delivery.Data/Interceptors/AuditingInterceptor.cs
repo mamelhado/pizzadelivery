@@ -8,9 +8,10 @@ namespace Delivery.Data.Interceptors
     public class AuditingInterceptor : ISaveChangesInterceptor
     {
         private SaveChangesAudit _audit;
-        public AuditingInterceptor() 
+        private string ConnectionString;
+        public AuditingInterceptor(string connectionString) 
         {
-
+            ConnectionString = connectionString;
         }
 
         public async ValueTask<InterceptionResult<int>> SavingChangesAsync(
@@ -20,7 +21,7 @@ namespace Delivery.Data.Interceptors
         {
             _audit = CreateAudit(eventData.Context);
 
-            using var auditContext = new AuditableContext();
+            using var auditContext = new AuditableContext(ConnectionString);
 
             auditContext.Add(_audit);
             await auditContext.SaveChangesAsync();
@@ -34,7 +35,7 @@ namespace Delivery.Data.Interceptors
         {
             _audit = CreateAudit(eventData.Context);
 
-            using var auditContext = new AuditableContext();
+            using var auditContext = new AuditableContext(ConnectionString);
             auditContext.Add(_audit);
             auditContext.SaveChanges();
 
@@ -43,7 +44,7 @@ namespace Delivery.Data.Interceptors
 
         public int SavedChanges(SaveChangesCompletedEventData eventData, int result)
         {
-            using var auditContext = new AuditableContext();
+            using var auditContext = new AuditableContext(ConnectionString);
 
             auditContext.Attach(_audit);
             _audit.Succeeded = true;
@@ -59,7 +60,7 @@ namespace Delivery.Data.Interceptors
             int result,
             CancellationToken cancellationToken = default)
         {
-            using var auditContext = new AuditableContext();
+            using var auditContext = new AuditableContext(ConnectionString);
 
             auditContext.Attach(_audit);
             _audit.Succeeded = true;
@@ -72,7 +73,7 @@ namespace Delivery.Data.Interceptors
 
         public void SaveChangesFailed(DbContextErrorEventData eventData)
         {
-            using var auditContext = new AuditableContext();
+            using var auditContext = new AuditableContext(ConnectionString);
 
             auditContext.Attach(_audit);
             _audit.Succeeded = false;
@@ -86,7 +87,7 @@ namespace Delivery.Data.Interceptors
             DbContextErrorEventData eventData,
             CancellationToken cancellationToken = default)
         {
-            using var auditContext = new AuditableContext();
+            using var auditContext = new AuditableContext(ConnectionString);
 
             auditContext.Attach(_audit);
             _audit.Succeeded = false;
@@ -116,8 +117,8 @@ namespace Delivery.Data.Interceptors
                 {
                     audit.Entities.Add(new EntityAudit { State = entry.State, AuditMessage = auditMessage });
                 }
+                audit.Action = entry.State;
             }
-
             return audit;
 
             string CreateAddedMessage(EntityEntry entry)

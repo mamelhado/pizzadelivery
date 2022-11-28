@@ -13,6 +13,7 @@ namespace Delivery.Domain.Entities.Audit
         public Guid AuditId { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
+        public EntityState Action { get; set; }
         public bool Succeeded { get; set; }
         public string ErrorMessage { get; set; }
 
